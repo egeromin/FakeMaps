@@ -85,7 +85,7 @@ class Triangle {
   public ArrayList<Triangle> getAllTriangles(int numTriangles) {
     HashMap<Triangle, Boolean> allTriangles = new HashMap<Triangle, Boolean>();
     Triangle currentTriangle = this;
-    int triangleWindow = 100;
+    int triangleWindow = 25;
 
     ArrayList<Triangle> triangleList = new ArrayList<Triangle>();
     triangleList.add(currentTriangle);
