@@ -48,24 +48,32 @@ class Triangle {
     this.direction = direction;
   }
 
-  public Triangle getNextTriangle(HashMap<Triangle, Boolean> allTriangles) {
+  public Triangle getNextTriangle(HashMap<Triangle, Boolean> allTriangles,
+                                  boolean checkExisting) {
     boolean newDirection = !this.direction;
     Triangle[] triangles = {
       new Triangle(this.x - 1, this.getSign() * 2 + this.y, newDirection),
       new Triangle(this.x + 1, this.getSign() * 2 + this.y, newDirection),
       new Triangle(this.x, this.y, newDirection)
     };
+    
+    Triangle nextTriangle;
+    if( checkExisting ) {
 
-    ArrayList<Triangle> validTriangles = new ArrayList<Triangle>();
+        ArrayList<Triangle> validTriangles = new ArrayList<Triangle>();
 
-    for (Triangle triangle : triangles) {
-        if (!allTriangles.containsKey(triangle)) {
-            validTriangles.add(triangle);
+        for (Triangle triangle : triangles) {
+            if (!allTriangles.containsKey(triangle)) {
+                validTriangles.add(triangle);
+            }
         }
+        int randi = (int) random(validTriangles.size());
+        nextTriangle = validTriangles.get(randi);
+    } else {
+        int randi = (int) random(3);
+        nextTriangle = triangles[randi];
+        
     }
-
-    int randi = (int) random(validTriangles.size());
-    Triangle nextTriangle = validTriangles.get(randi);
     allTriangles.put(nextTriangle, true);
     return nextTriangle;
   }
@@ -77,8 +85,22 @@ class Triangle {
   public ArrayList<Triangle> getAllTriangles(int numTriangles) {
     HashMap<Triangle, Boolean> allTriangles = new HashMap<Triangle, Boolean>();
     Triangle currentTriangle = this;
+    int triangleWindow = 100;
+
+    ArrayList<Triangle> triangleList = new ArrayList<Triangle>();
+    triangleList.add(currentTriangle);
+
+    allTriangles.put(currentTriangle, false);
     for (int i = 0; i < numTriangles; i++) {
-      currentTriangle = currentTriangle.getNextTriangle(allTriangles);
+      
+      int startInt = (int)random(triangleList.size());
+      
+      Triangle startTriangle = triangleList.get(startInt);
+      currentTriangle = startTriangle.getNextTriangle(allTriangles, true);
+      triangleList.add(currentTriangle);
+      if (triangleList.size() > triangleWindow) {
+        triangleList.remove(0);
+      }
     }
 
     return new ArrayList<Triangle>(allTriangles.keySet());
