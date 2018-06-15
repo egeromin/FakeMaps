@@ -19,15 +19,19 @@ void drawCircle2(float x, float y, float radius) {
   }
 }
 
-Triangle currentTriangle = new Triangle(100, 100, true);
+Triangle initialTriangle = new Triangle(0, 0, true);
 //Triangle nextTriangle = currentTriangle.getNextTriangle(allTriangles);
 
-ArrayList<Triangle> allTriangles = currentTriangle.getAllTriangles(15000);
+ArrayList<Triangle> allTriangles = initialTriangle.getAllTriangles(1000000);
 
-
+int width = 1000;
+int height = 1000;
 
 void setup() {
-  size(500, 500);
+    background(0,0,255);
+    noStroke();
+    fill(0,255,0);
+  size(1000, 1000);
   //background(0);
   //noStroke();
   //fill(102);
@@ -51,8 +55,17 @@ class Triangle {
       new Triangle(this.x + 1, this.getSign() * 2 + this.y, newDirection),
       new Triangle(this.x, this.y, newDirection)
     };
-    int randi = (int) random(3);
-    Triangle nextTriangle = triangles[randi];
+
+    ArrayList<Triangle> validTriangles = new ArrayList<Triangle>();
+
+    for (Triangle triangle : triangles) {
+        if (!allTriangles.containsKey(triangle)) {
+            validTriangles.add(triangle);
+        }
+    }
+
+    int randi = (int) random(validTriangles.size());
+    Triangle nextTriangle = validTriangles.get(randi);
     allTriangles.put(nextTriangle, true);
     return nextTriangle;
   }
@@ -85,14 +98,14 @@ class Triangle {
 
 void drawTriangle(Triangle triangle_params) {
   int sign = triangle_params.getSign();
-  int scaling_factor = 2;
+  int scaling_factor = 1;
   triangle(
-      triangle_params.x*scaling_factor,
-      triangle_params.y*scaling_factor,
-      ( triangle_params.x + 2 )*scaling_factor,
-      triangle_params.y*scaling_factor,
-      (triangle_params.x + 1)*scaling_factor,
-      (triangle_params.y + 2 * sign )*scaling_factor);
+      triangle_params.x*scaling_factor + 500,
+      triangle_params.y*scaling_factor + 500,
+      ( triangle_params.x + 2 )*scaling_factor + 500,
+      triangle_params.y*scaling_factor + 500,
+      (triangle_params.x + 1)*scaling_factor + 500,
+      (triangle_params.y + 2 * sign )*scaling_factor + 500);
 }
 
 void draw() {
@@ -102,7 +115,7 @@ void draw() {
   //int x2 = 150;
 
 //   HashMap<Triangle, Boolean> allTriangles = new HashMap<Triangle, Boolean>();
-// 
+//
 //   // Triangle currentTriangle = new Triangle(10, 10, true);
 //   drawTriangle(currentTriangle);
 //   drawTriangle(nextTriangle);
